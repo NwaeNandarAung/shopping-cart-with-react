@@ -8,21 +8,54 @@ import Cart from '../../stateless/cart/Cart'
 import Button from '../../stateless/button/Button'
 import Form from '../../stateless/form/Form'
 import styles from './home.module.css'
-import image1 from '../../../images/car1.jpg'
-import image2 from '../../../images/car2.jpg'
-import image3 from '../../../images/car3.jpg'
-import image4 from '../../../images/car4.jpg'
-import image5 from '../../../images/car5.jpg'
-import image6 from '../../../images/car6.jpg'
-import image7 from '../../../images/car7.jpg'
-import image8 from '../../../images/car8.jpg'
-import image9 from '../../../images/car9.jpg'
-import image10 from '../../../images/car10.jpg'
-import image11 from '../../../images/car11.jpg'
-import image12 from '../../../images/car12.jpg'
-
+import data from '../../../data.json'
 
 class Home extends Component {
+    state = {
+        cars: data.cars,
+        brand: "",
+        sort: ""
+    }
+
+    filterVehicleHandler = (event) => {
+        const brand = event.target.value;
+
+        if (brand === "") {
+            this.setState({
+                brand,
+                cars: data.cars,
+            })
+        } else {
+            this.setState({
+                brand,
+                cars: data.cars.filter(
+                    car => car.brand.indexOf(brand) >= 0
+                )
+            })
+        }
+    }
+
+    sortVehicleHandler = (event) => {
+        const sort = event.target.value;
+
+        this.setState({
+            sort,
+            cars : this.state.cars.slice().sort((a,b) => (
+                sort === "Lowest"
+                ? a.price > b.price
+                    ? 1
+                    : -1
+                : sort === "Higest"
+                ? a.price < b.price
+                    ? 1
+                    : -1
+                : a._id > b._id
+                    ? 1
+                    : -1
+            ))
+        })
+    }
+
     render() {
         return (
             <>
@@ -30,24 +63,16 @@ class Home extends Component {
                     <Row>
                         <Col lg={8}>
                             {/* start of filter */}
-                            <Filter />
+                            <Filter brand={this.state.brand} 
+                            sort={this.state.sort}
+                            filterVehicleHandler={this.filterVehicleHandler} 
+                            sortVehicleHandler={this.sortVehicleHandler}/>
                             {/* end of filter */}
                             <hr />
 
                             {/* start of cars */}
                             <Row>
-                                <Vehicles image={image1} />
-                                <Vehicles image={image2} />
-                                <Vehicles image={image3} />
-                                <Vehicles image={image4} />
-                                <Vehicles image={image5} />
-                                <Vehicles image={image6} />
-                                <Vehicles image={image7} />
-                                <Vehicles image={image8} />
-                                <Vehicles image={image9} />
-                                <Vehicles image={image10} />
-                                <Vehicles image={image11} />
-                                <Vehicles image={image12} />
+                                <Vehicles cars={this.state.cars}  />
                             </Row>
                             {/* end of cars */}
                         </Col>
@@ -61,10 +86,11 @@ class Home extends Component {
                             </Row>
                             {/* end of cart heading */}
                             <hr />
+
                             {/* start of cart */}
                             <Row>
-                                <Cart image={image1}></Cart>
-                                <Cart image={image9}></Cart>
+                                <Cart image={this.state.cars[0].image}></Cart>
+                                {/* <Cart image={this.state.cars[8].image}></Cart> */}
                             </Row>
                             <hr />
 
@@ -86,7 +112,7 @@ class Home extends Component {
 
                             {/* start of client form*/}
                             <Row>
-                                <Form/>
+                                <Form />
                             </Row>
                             {/* end of client form*/}
                         </Col>

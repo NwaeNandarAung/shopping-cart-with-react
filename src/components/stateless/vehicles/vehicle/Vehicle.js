@@ -11,7 +11,7 @@ const vehicle = (props) => {
                 <Image src={props.image} thumbnail />
 
                 <div className="product-price">
-                    <div>$ 100</div>
+                    <div>$ {props.price}</div>
                     <Button typeBtn="btn-success">+ cart</Button>
                 </div>
             </Col>

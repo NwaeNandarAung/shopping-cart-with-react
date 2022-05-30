@@ -4,7 +4,13 @@ import Vehicle from './vehicle/Vehicle'
 const vehicles = (props) => {
     return (
         <>
-           <Vehicle image={props.image}></Vehicle>
+            {
+                props.cars.map((car) => {
+                    return (
+                        <Vehicle price={car.price} image={car.image} key={car._id}></Vehicle>
+                    )
+                })
+            }
         </>
     )
 }

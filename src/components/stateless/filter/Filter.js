@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import styles from '../../stateful/home/home.module.css'
 
-const filter = () => {
+const filter = (props) => {
     return (
         <>
             <Row className={styles.background}>
@@ -13,19 +13,18 @@ const filter = () => {
                     </div>
                 </Col>
                 <Col md={4} sm={4} xs={4}>
-                    <select className="form-control">
-                        <option>Tout</option>
+                    <select value={props.brand} className="form-control" onChange={props.filterVehicleHandler}>
+                        <option value="">All</option>
                         <option>Mercedes</option>
                         <option>Toyota</option>
-                        <option>Mazda</option>
+                        <option>Nissan</option>
                     </select>
                 </Col>
                 <Col md={4} sm={4} xs={4}>
-                    <select className="form-control">
-                        <option>Tout</option>
-                        <option>Moins chère</option>
-                        <option>Chère</option>
-                        <option>Très Chère</option>
+                    <select value={props.sort} className="form-control" onChange={props.sortVehicleHandler}>
+                        <option>All</option>
+                        <option>Lowest</option>
+                        <option>Highest</option>
                     </select>
                 </Col>
             </Row>
