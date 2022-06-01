@@ -12,7 +12,7 @@ const vehicle = (props) => {
 
                 <div className="product-price">
                     <div>$ {props.price}</div>
-                    <Button typeBtn="btn-success">+ cart</Button>
+                    <Button typeBtn="btn-success" click={props.addToCart}>+ cart</Button>
                 </div>
             </Col>
         </>

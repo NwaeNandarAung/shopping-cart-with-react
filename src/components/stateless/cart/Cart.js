@@ -10,9 +10,9 @@ const cart = (props) => {
             <Col md={{ span: 6, offset: 3 }} sm={3} xs={3} className={styles.marginbottom}>
                 <Image src={props.image} thumbnail />
                 <div className="product-qty">
-                    <div>$100 X 1</div>
+                    <div>{`$ ${props.price} X ${props.count}`}</div>
                     {/* <button className="btn btn-danger"> X </button> */}
-                    <Button typeBtn="btn-danger">X</Button>
+                    <Button typeBtn="btn-danger" click={props.removeFromCart}>X</Button>
                 </div>
             </Col>
         </>

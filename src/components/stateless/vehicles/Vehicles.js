@@ -7,7 +7,9 @@ const vehicles = (props) => {
             {
                 props.cars.map((car) => {
                     return (
-                        <Vehicle price={car.price} image={car.image} key={car._id}></Vehicle>
+                        <Vehicle price={car.price} image={car.image} key={car._id}
+                            addToCart={() => props.addToCart(car)}>
+                        </Vehicle>
                     )
                 })
             }

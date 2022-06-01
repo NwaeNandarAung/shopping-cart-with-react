@@ -14,7 +14,8 @@ class Home extends Component {
     state = {
         cars: data.cars,
         brand: "",
-        sort: ""
+        sort: "",
+        cartItems: [],
     }
 
     filterVehicleHandler = (event) => {
@@ -40,20 +41,50 @@ class Home extends Component {
 
         this.setState({
             sort,
-            cars : this.state.cars.slice().sort((a,b) => (
+            cars: this.state.cars.slice().sort((a, b) => (
                 sort === "Lowest"
-                ? a.price > b.price
-                    ? 1
-                    : -1
-                : sort === "Higest"
-                ? a.price < b.price
-                    ? 1
-                    : -1
-                : a._id > b._id
-                    ? 1
-                    : -1
+                    ? a.price > b.price
+                        ? 1
+                        : -1
+                    : sort === "Higest"
+                        ? a.price < b.price
+                            ? 1
+                            : -1
+                        : a._id > b._id
+                            ? 1
+                            : -1
             ))
         })
+    }
+
+    addToCartHandler = (vehicle) => {
+        const cartItems = this.state.cartItems.slice();
+
+        let alreadyInCart = false;
+
+        cartItems.forEach(item => {
+            if (item._id === vehicle._id) {
+                alreadyInCart = true;
+                item.count++;
+            }
+        });
+
+        if (!alreadyInCart) {
+            cartItems.push({ ...vehicle, count: 1 })
+        }
+        this.setState({ cartItems })
+
+        console.log(cartItems)
+    }
+
+    removeFromCartHandler = (vehicle) => {
+        const index = this.state.cartItems.findIndex(index => {
+            return index._id === vehicle._id
+        })
+
+        const cartItems = [...this.state.cartItems]
+        cartItems.splice(index, 1)
+        this.setState({ cartItems })
     }
 
     render() {
@@ -63,16 +94,16 @@ class Home extends Component {
                     <Row>
                         <Col lg={8}>
                             {/* start of filter */}
-                            <Filter brand={this.state.brand} 
-                            sort={this.state.sort}
-                            filterVehicleHandler={this.filterVehicleHandler} 
-                            sortVehicleHandler={this.sortVehicleHandler}/>
+                            <Filter brand={this.state.brand}
+                                sort={this.state.sort}
+                                filterVehicleHandler={this.filterVehicleHandler}
+                                sortVehicleHandler={this.sortVehicleHandler} />
                             {/* end of filter */}
                             <hr />
 
                             {/* start of cars */}
                             <Row>
-                                <Vehicles cars={this.state.cars}  />
+                                <Vehicles cars={this.state.cars} addToCart={this.addToCartHandler} />
                             </Row>
                             {/* end of cars */}
                         </Col>
@@ -89,15 +120,26 @@ class Home extends Component {
 
                             {/* start of cart */}
                             <Row>
-                                <Cart image={this.state.cars[0].image}></Cart>
-                                {/* <Cart image={this.state.cars[8].image}></Cart> */}
+                                {
+                                    this.state.cartItems.map(vehicle => {
+                                        return (<Cart image={vehicle.image} count={vehicle.count}
+                                            price={vehicle.price} key={vehicle._id}
+                                            removeFromCart={() => this.removeFromCartHandler(vehicle)} />)
+                                    })
+                                }
                             </Row>
                             <hr />
 
                             <Row>
                                 <Col md={12} sm={12} xs={12}>
                                     <div className="product-price">
-                                        <div>Total : </div>
+                                        <div>Total :
+                                            {
+                                                this.state.cartItems.reduce((a, c) => a + c.
+                                                    price * c.count, 0
+                                                )
+                                            }
+                                        </div>
                                     </div>
                                 </Col>
                                 <Col md={12} sm={12} xs={12}>
