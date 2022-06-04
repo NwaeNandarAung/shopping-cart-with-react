@@ -9,7 +9,7 @@ const filter = (props) => {
             <Row className={styles.background}>
                 <Col md={4} sm={4} xs={4}>
                     <div className={styles.text}>
-                        Véhicules : 100
+                        { `Vehicles: ${props.count}`}
                     </div>
                 </Col>
                 <Col md={4} sm={4} xs={4}>

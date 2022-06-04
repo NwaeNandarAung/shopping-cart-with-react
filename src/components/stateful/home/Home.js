@@ -15,7 +15,8 @@ class Home extends Component {
         cars: data.cars,
         brand: "",
         sort: "",
-        cartItems: [],
+        cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[],
+        isFormOpen: false
     }
 
     filterVehicleHandler = (event) => {
@@ -75,6 +76,8 @@ class Home extends Component {
         this.setState({ cartItems })
 
         console.log(cartItems)
+
+        localStorage.setItem("cartItems", JSON.stringify(cartItems))
     }
 
     removeFromCartHandler = (vehicle) => {
@@ -85,6 +88,8 @@ class Home extends Component {
         const cartItems = [...this.state.cartItems]
         cartItems.splice(index, 1)
         this.setState({ cartItems })
+
+        localStorage.setItem("cartItems", JSON.stringify(cartItems))
     }
 
     render() {
@@ -92,72 +97,105 @@ class Home extends Component {
             <>
                 <Container>
                     <Row>
-                        <Col lg={8}>
-                            {/* start of filter */}
-                            <Filter brand={this.state.brand}
-                                sort={this.state.sort}
-                                filterVehicleHandler={this.filterVehicleHandler}
-                                sortVehicleHandler={this.sortVehicleHandler} />
-                            {/* end of filter */}
-                            <hr />
+                        {
+                            this.state.cartItems.length > 0 ?
+                                (
+                                    <>
+                                        <Col lg={8}>
+                                            {/* start of filter */}
+                                            <Filter brand={this.state.brand}
+                                                sort={this.state.sort}
+                                                filterVehicleHandler={this.filterVehicleHandler}
+                                                sortVehicleHandler={this.sortVehicleHandler}
+                                                count={this.state.cars.length} />
+                                            {/* end of filter */}
+                                            <hr />
 
-                            {/* start of cars */}
-                            <Row>
-                                <Vehicles cars={this.state.cars} addToCart={this.addToCartHandler} />
-                            </Row>
-                            {/* end of cars */}
-                        </Col>
+                                            {/* start of cars */}
+                                            <Row>
+                                                <Vehicles cars={this.state.cars} addToCart={this.addToCartHandler} lg={4} />
+                                            </Row>
+                                            {/* end of cars */}
+                                        </Col>
 
-                        <Col lg={4}>
-                            {/* start of cart heading */}
-                            <Row>
-                                <Col md={{ span: 8, offset: 2 }}>
-                                    <h6 className={styles.margincart}>You have 2 product (s) in cart</h6>
-                                </Col>
-                            </Row>
-                            {/* end of cart heading */}
-                            <hr />
+                                        <Col lg={4}>
+                                            {/* start of cart heading */}
+                                            <Row>
+                                                <Col md={{ span: 8, offset: 2 }}>
+                                                    <h6 className={styles.margincart}>{`You have ${this.state.cartItems.length} product (s) in cart`}</h6>
+                                                </Col>
+                                            </Row>
+                                            {/* end of cart heading */}
+                                            <hr />
 
-                            {/* start of cart */}
-                            <Row>
-                                {
-                                    this.state.cartItems.map(vehicle => {
-                                        return (<Cart image={vehicle.image} count={vehicle.count}
-                                            price={vehicle.price} key={vehicle._id}
-                                            removeFromCart={() => this.removeFromCartHandler(vehicle)} />)
-                                    })
-                                }
-                            </Row>
-                            <hr />
+                                            {/* start of cart */}
+                                            <Row>
+                                                {
+                                                    this.state.cartItems.map(vehicle => {
+                                                        return (<Cart image={vehicle.image} count={vehicle.count}
+                                                            price={vehicle.price} key={vehicle._id}
+                                                            removeFromCart={() => this.removeFromCartHandler(vehicle)} />)
+                                                    })
+                                                }
+                                            </Row>
+                                            <hr />
 
-                            <Row>
-                                <Col md={12} sm={12} xs={12}>
-                                    <div className="product-price">
-                                        <div>Total :
-                                            {
-                                                this.state.cartItems.reduce((a, c) => a + c.
-                                                    price * c.count, 0
-                                                )
-                                            }
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col md={12} sm={12} xs={12}>
-                                    <div className="product-price">
-                                        <Button typeBtn="btn-success w-100">Order</Button>
-                                    </div>
-                                </Col>
-                            </Row>
-                            {/* end of cart */}
+                                            <Row>
+                                                <Col md={12} sm={12} xs={12}>
+                                                    <div className="product-price">
+                                                        <div>Total :
+                                                            {
+                                                                this.state.cartItems.reduce((a, c) => a + c.
+                                                                    price * c.count, 0
+                                                                )
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </Col>
+                                                <Col md={12} sm={12} xs={12}>
+                                                    <div className="product-price">
+                                                        <Button typeBtn="btn-success w-100"
+                                                            click={() => this.setState(prevState => ({
+                                                                isFormOpen: !prevState.isFormOpen
+                                                            })
+                                                            )}>Order</Button>
+                                                    </div>
+                                                </Col>
+                                            </Row>
+                                            {/* end of cart */}
 
-                            <hr />
+                                            <hr />
 
-                            {/* start of client form*/}
-                            <Row>
-                                <Form />
-                            </Row>
-                            {/* end of client form*/}
-                        </Col>
+                                            {/* start of client form*/}
+                                            <Row>
+                                                {
+                                                    this.state.isFormOpen && <Form />
+                                                }
+                                            </Row>
+                                            {/* end of client form*/}
+                                        </Col>
+                                    </>
+                                )
+                                :
+                                (
+                                    <Col lg={12}>
+                                        {/* start of filter */}
+                                        <Filter brand={this.state.brand}
+                                            sort={this.state.sort}
+                                            filterVehicleHandler={this.filterVehicleHandler}
+                                            sortVehicleHandler={this.sortVehicleHandler}
+                                            count={this.state.cars.length} />
+                                        {/* end of filter */}
+                                        <hr />
+
+                                        {/* start of cars */}
+                                        <Row>
+                                            <Vehicles cars={this.state.cars} addToCart={this.addToCartHandler} lg={3} />
+                                        </Row>
+                                        {/* end of cars */}
+                                    </Col>
+                                )
+                        }
                     </Row>
                 </Container>
             </>

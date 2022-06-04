@@ -7,7 +7,7 @@ import Button from '../../button/Button'
 const vehicle = (props) => {
     return (
         <>
-            <Col lg={4} md={6} sm={6} xs={6} className={styles.margin}>
+            <Col lg={props.lg} md={6} sm={6} xs={6} className={styles.margin}>
                 <Image src={props.image} thumbnail />
 
                 <div className="product-price">
