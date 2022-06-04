@@ -25,3 +25,18 @@ footer, .minSite{
 .product-qty div {
   font-size: 1rem;
 }
+
+#cursor {
+  cursor: pointer;
+}
+
+.close-modal {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 1000;
+}
+
+h3, p {
+  text-align: center;
+}
